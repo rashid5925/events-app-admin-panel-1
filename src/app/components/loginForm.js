@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
-import Dashboard from "../dashboard/page";
 export default function Login() {
+
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -18,8 +18,7 @@ export default function Login() {
     event.preventDefault();
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
-        console.log(userCredential.user);
-        alert("You are signed in");
+        window.location.href = '/dashboard';
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -28,8 +27,9 @@ export default function Login() {
         alert("Invalid Authentication");
       });
   };
-
+  
   return (
+    
     <div className="bg-gray-200 font-sans text-gray-700 h-[100vh]">
       <div className="container mx-auto p-8 flex">
         <div className="max-w-md w-full mx-auto">

@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-
+import { getMessaging, getToken } from "firebase/messaging";
 const firebaseConfig = {
   apiKey: "AIzaSyABfNQgTMmB6muVIYBlvHghMVKAqHyzm_Q",
   authDomain: "grabcar-8506b.firebaseapp.com",
