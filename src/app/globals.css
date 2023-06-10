@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    zoom: 80%;
+    -ms-zoom: 80%;
+    -webkit-zoom: 80%;
+}
