@@ -1,12 +1,14 @@
 'use client';
 import { useState, useEffect } from "react";
 import { db, storage } from "@/app/firebase/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import Sidebar from "@/app/components/sidebar";
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
 import Alert from "@/app/components/alert";
+import { useUserContext } from "@/context/UserContext";
 
 export default function UpdateEvent({params}) {
     const router = useRouter();
@@ -36,6 +38,46 @@ export default function UpdateEvent({params}) {
     
     const [showMessage, setShowMessage] = useState(false);
     const [message, setMessage] = useState({});
+    const { username } = useUserContext();
+    if (!username) {
+        router.push('/');
+    }
+    // Function to send a notification to all users
+  async function sendNotificationToAllUsers(notificationDoc) {
+    try {
+      // Get the FCM token for each user
+      const messaging = getMessaging();
+      const token = await getToken(messaging);
+
+      // Send a notification to each user
+      const notificationPromises = token.map(async (userToken) => {
+        const payload = {
+          notification: {
+            title: "New Notification",
+            body: notificationDoc.message,
+          },
+          token: userToken,
+        };
+
+        await fetch("https://fcm.googleapis.com/fcm/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "AAAADyOHPMY:APA91bEhy8W9cUmX91b0Mb8GRuBaGaqE0ncI86ohp0E6C3Y4OdufpaJln2sJvSaP7jLXDUCOczidm11UCsFkjKpX1yoC2c418lqNQT6V_o_ds6L7FhQwi7wn4nJHjTw6dgBQJykYKBsi",
+          },
+          body: JSON.stringify(payload),
+        });
+      });
+
+      // Wait for all notifications to be sent
+      await Promise.all(notificationPromises);
+      console.log("Notification sent to all users");
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  }
+    
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -70,6 +112,20 @@ export default function UpdateEvent({params}) {
                     setShowMessage(true);
                     setMessage({'value': 'Error while updating Event', 'color': 'red'});
                 }
+                //Push Notification
+                let createdAt = new Date();
+                let eventId = values.id;
+                const notificationID = uuidv4();
+                var notificationMessage = values.title + ' event plan changed';
+                const notificationDocRef = doc(db, "Global-Notification", uniqueId);
+                let notificationDoc = {
+                    created_at: createdAt,
+                    event_id: eventId,
+                    id: notificationID,
+                    message: notificationMessage,
+                };
+                await setDoc(notificationDocRef, notificationDoc);
+                sendNotificationToAllUsers(notificationDoc);
             });
         } else {
             
@@ -86,6 +142,20 @@ export default function UpdateEvent({params}) {
                 setShowMessage(true);
                 setMessage({'value': 'Error while updating Event', 'color': 'red'});
             }
+            //Push Notification
+            let createdAt = new Date();
+            let eventId = values.id;
+            const notificationID = uuidv4();
+            var notificationMessage = values.title + ' event plan changed';
+            const notificationDocRef = doc(db, "Global-Notification", uniqueId);
+            let notificationDoc = {
+                created_at: createdAt,
+                event_id: eventId,
+                id: notificationID,
+                message: notificationMessage,
+            };
+            await setDoc(notificationDocRef, notificationDoc);
+            sendNotificationToAllUsers(notificationDoc);
         }
     }
     return (

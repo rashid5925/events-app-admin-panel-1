@@ -5,8 +5,11 @@ import Table from "../components/table";
 import Loading from "../loading";
 import { db } from '../firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { useUserContext } from "@/context/UserContext";
+import { useRouter } from 'next/navigation';
 
 export default function Users() {
+    const router = useRouter();
     const [dataDb, setEvents] = useState([]);
     useEffect(() => {
         const fetchEvents = async () => {
@@ -29,6 +32,10 @@ export default function Users() {
     }
         fetchEvents();
     }, []);
+    const { username } = useUserContext();
+    if (!username) {
+        router.push('/');
+    }
     let data = {'headerData': ['Photo', 'Name', 'Email', 'Plan',
     'Status'], 
     'data': dataDb, 'role': 'user'};

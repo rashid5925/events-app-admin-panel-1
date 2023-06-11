@@ -1,13 +1,17 @@
 'use client';
-import { useState } from "react";
+import { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from 'next/navigation';
 import { auth } from "../firebase/firebase";
-export default function Login() {
+import { useUserContext } from '@/context/UserContext';
 
+export default function Login() {
+  const router = useRouter();
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
+  const { setLoggedInUser } = useUserContext();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -18,7 +22,8 @@ export default function Login() {
     event.preventDefault();
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
-        window.location.href = '/dashboard';
+        setLoggedInUser(userCredential.user.email);
+        router.push('/dashboard');
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -30,7 +35,7 @@ export default function Login() {
   
   return (
     
-    <div className="bg-gray-200 font-sans text-gray-700 h-[100vh]">
+    <div className="bg-gray-200 font-sans text-gray-700 h-[125vh] overflow-hidden">
       <div className="container mx-auto p-8 flex">
         <div className="max-w-md w-full mx-auto">
           <h1 className="text-4xl text-center mb-12 font-thin font-bold">

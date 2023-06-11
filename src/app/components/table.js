@@ -6,7 +6,6 @@ import { doc, deleteDoc } from 'firebase/firestore';
 import Link from "next/link";
 
 export default function Table({params}) {
-    console.log(params);
     const [data, setData] = useState(params?.data || []);
     let headers = params.headerData;
     const role = params.role;
@@ -18,7 +17,6 @@ export default function Table({params}) {
                 if (role == 'events') {
                     await deleteDoc(doc(db, 'Event', id));
                 } else if (role == 'user') {
-                    console.log("dadasdsads");
                     await deleteDoc(doc(db, 'Users', id));
                 }
                 setData(data.filter((event) => event.id !== id));

@@ -1,7 +1,15 @@
+'use client';
 import AddUserForm from "../components/addUserForm";
-import Sidebar from "../components/sidebar"
+import Sidebar from "../components/sidebar";
+import { useUserContext } from "@/context/UserContext";
+import { useRouter } from 'next/navigation';
 
 export default function AddUser() {
+    const router = useRouter();
+    const { username } = useUserContext();
+    if (!username) {
+        router.push('/');
+    }
     return (
         <>
             <Sidebar></Sidebar>

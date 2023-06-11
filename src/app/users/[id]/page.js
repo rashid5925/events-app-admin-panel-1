@@ -7,6 +7,7 @@ import Sidebar from "@/app/components/sidebar";
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
 import Alert from "@/app/components/alert";
+import { useUserContext } from "@/context/UserContext";
 
 export default function UpdateUser({params}) {
     const router = useRouter();
@@ -29,6 +30,10 @@ export default function UpdateUser({params}) {
     
     const [showMessage, setShowMessage] = useState(false);
     const [message, setMessage] = useState({});
+    const { username } = useUserContext();
+    if (!username) {
+        router.push('/');
+    }
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -49,7 +54,7 @@ export default function UpdateUser({params}) {
             const upload = uploadBytes(imageRef, fileVal);
             upload.then(async (snapshot) => {
                     const downloadUrl = await getDownloadURL(snapshot.ref);
-                    values.image = downloadUrl;
+                    values.profile_image = downloadUrl;
                     try {
                         const customDocRef = doc(db, "Users", uniqueId);
                         await updateDoc(customDocRef, {

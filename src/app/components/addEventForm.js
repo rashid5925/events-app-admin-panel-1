@@ -8,6 +8,9 @@ import { v4 as uuidv4 } from "uuid";
 import Alert from "./alert";
 
 export default function AddEventForm() {
+  const [values, setValues] = useState({});
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState({});
   // Function to send a notification to all users
   async function sendNotificationToAllUsers(notificationDoc) {
     try {
@@ -44,9 +47,7 @@ export default function AddEventForm() {
     }
   }
   
-  const [values, setValues] = useState({});
-  const [showMessage, setShowMessage] = useState(false);
-  const [message, setMessage] = useState({});
+  
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -96,7 +97,7 @@ export default function AddEventForm() {
       let createdAt = new Date();
       let eventId = values.id;
       const notificationID = uuidv4();
-      var notificationMessage = values.title;
+      var notificationMessage = values.title + ' event organized';
       const notificationDocRef = doc(db, "Global-Notification", uniqueId);
       let notificationDoc = {
         created_at: createdAt,
