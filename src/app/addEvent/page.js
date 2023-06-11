@@ -1,13 +1,17 @@
+'use client';
 import AddEventForm from "../components/addEventForm"
 import Sidebar from "../components/sidebar"
 import { useUserContext } from "@/context/UserContext";
 import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
 
 export default function AddEvent() {
     const router = useRouter();
     const { username } = useUserContext();
     if (!username) {
-        router.push('/');
+        useEffect(() => {
+            router.push('/');
+        }, [])
     }
     return (
         <>

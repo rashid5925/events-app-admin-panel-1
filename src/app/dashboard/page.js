@@ -42,7 +42,9 @@ export default function Dashboard() {
         }, []);
     const { username } = useUserContext();
     if (!username) {
-        router.push('/');
+        useEffect(() => {
+            router.push('/');
+        }, [])
     }
     let data = {'headerData': ['Photo', 'Title', 'Host Name', 'Type',
         'Category', 'Capacity', 'Date', 'Description',

@@ -32,7 +32,9 @@ export default function UpdateUser({params}) {
     const [message, setMessage] = useState({});
     const { username } = useUserContext();
     if (!username) {
-        router.push('/');
+        useEffect(() => {
+            router.push('/');
+        }, [])
     }
     const handleChange = (event) => {
         const name = event.target.name;

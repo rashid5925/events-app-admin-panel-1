@@ -1,12 +1,15 @@
 'use client';
 import { useUserContext } from "@/context/UserContext";
 import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
 
 export default function Loading() {
     const router = useRouter();
     const { username } = useUserContext();
     if (!username) {
-        router.push('/');
+        useEffect(() => {
+            router.push('/');
+        }, [])
     }
     return (
         <div className="flex justify-center items-center w-full h-[100vh]">

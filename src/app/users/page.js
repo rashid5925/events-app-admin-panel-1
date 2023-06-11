@@ -34,7 +34,9 @@ export default function Users() {
     }, []);
     const { username } = useUserContext();
     if (!username) {
-        router.push('/');
+        useEffect(() => {
+            router.push('/');
+        }, [])
     }
     let data = {'headerData': ['Photo', 'Name', 'Email', 'Plan',
     'Status'], 

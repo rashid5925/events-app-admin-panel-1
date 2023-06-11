@@ -40,7 +40,9 @@ export default function UpdateEvent({params}) {
     const [message, setMessage] = useState({});
     const { username } = useUserContext();
     if (!username) {
-        router.push('/');
+        useEffect(() => {
+            router.push('/');
+        }, [])
     }
     // Function to send a notification to all users
   async function sendNotificationToAllUsers(notificationDoc) {
